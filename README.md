@@ -1,2 +1,2 @@
 # PostgreServer
-PostgreSQL server with pg4admin 
+PostgreSQL server with pgAdmin4
