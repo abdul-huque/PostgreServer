@@ -1,0 +1,50 @@
+####
+# Docker stack to deploy postgres:latest on alpine
+# container with a pgadmin4 container.
+#
+# Created : 20210814
+# By      : ahuque@msn.com
+#
+
+version: "3.7"
+
+services:
+
+  ####
+  # Latest version of PostgreSQL
+  # running on Alpine linux container
+  #
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_LISTEN_PORT}
+
+  
+  pgadmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${PGADMIN_LISTEN_PORT}
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    links:
+      - "db:pgsql-server"
+ 
+
+volumes:
+  postgres-data:
+  pgadmin-data:
